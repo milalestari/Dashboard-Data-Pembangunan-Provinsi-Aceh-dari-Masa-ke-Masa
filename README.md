@@ -14,11 +14,27 @@ Dashboard interaktif berbasis web untuk visualisasi data pembangunan Provinsi Ac
 ## 📊 Data yang Tersedia
 
 ### Neraca Regional (Tersedia)
-1. **PDRB ADHB & ADHK** - Produk Domestik Regional Bruto
-2. **Pertumbuhan Ekonomi** - Tingkat pertumbuhan sektor migas dan non-migas
-3. **Kontribusi Sektor** - Kontribusi berbagai sektor terhadap PDRB
-4. **PDRB Per Kapita** - PDRB per kapita penduduk
-5. **Kontribusi Regional** - Kontribusi kabupaten/kota terhadap PDRB
+1. **PDRB ADHB & ADHK (Migas + Non-Migas)**  
+   Nilai PDRB dalam harga berlaku (ADHB) dan harga konstan (ADHK).
+2. **Pertumbuhan Ekonomi Aceh (Migas + Non-Migas)**  
+   Laju pertumbuhan ekonomi tahunan, dibedakan antara sektor migas dan non-migas.
+3. **Kontribusi PDRB menurut Kelompok Sektor (Migas)**  
+   Persentase sumbangan tiap sektor ekonomi dengan memasukkan migas.
+4. **Kontribusi PDRB menurut Kelompok Sektor (Non-Migas)**  
+   Persentase sumbangan tiap sektor ekonomi tanpa migas.
+5. **Kontribusi PDRB menurut Kelompok Pengeluaran**  
+   Distribusi PDRB berdasarkan pendekatan pengeluaran:  
+   - Konsumsi Rumah Tangga  
+   - Lembaga Non-Profit yang Melayani Rumah Tangga (LNPRT)  
+   - Konsumsi Pemerintah  
+   - Pembentukan Modal Tetap Bruto (PMTB)  
+   - Ekspor - Impor
+6. **PDRB Per Kapita Aceh (ADHB/ADHK)**  
+   Rata-rata nilai PDRB per penduduk di Aceh.
+7. **Kontribusi Kabupaten/Kota terhadap PDRB Aceh**  
+   Porsi kontribusi PDRB masing-masing kabupaten/kota terhadap total provinsi.
+8. **PDRB Per Kapita Kabupaten/Kota (ADHB/ADHK)**  
+   Nilai PDRB per kapita di setiap kabupaten/kota.
 
 ### Sektor Lain (Coming Soon)
 - Pertanian
@@ -142,23 +158,6 @@ aceh-development-dashboard/
 2. Connect ke Streamlit Cloud
 3. Deploy dengan satu klik
 
-### Heroku
-1. Buat `Procfile`:
-```
-web: sh setup.sh && streamlit run main_app.py
-```
-2. Deploy via Heroku CLI atau GitHub integration
-
-### Docker
-```dockerfile
-FROM python:3.9-slim
-WORKDIR /app
-COPY . .
-RUN pip install -r requirements.txt
-EXPOSE 8501
-CMD ["streamlit", "run", "main_app.py"]
-```
-
 ## 🤝 Kontribusi
 
 1. Fork project ini
@@ -169,13 +168,12 @@ CMD ["streamlit", "run", "main_app.py"]
 
 ## 📄 Lisensi
 
-Project ini dikembangkan untuk UPTD Statistik Diskominsa Aceh. Menggunakan data dari BPS Provinsi Aceh dan BAPPEDA Aceh.
+Project ini dikembangkan untuk UPTD Statistik Diskominsa Aceh. Menggunakan data dari Open Data Aceh.
 
 ## 📞 Support
 
 Untuk bantuan teknis atau pertanyaan:
-- Email: [your-email@domain.com]
-- GitHub Issues: [repository-url]/issues
+- Email: [milamilalestari8@.com]
 
 ## 🙏 Acknowledgments
 
