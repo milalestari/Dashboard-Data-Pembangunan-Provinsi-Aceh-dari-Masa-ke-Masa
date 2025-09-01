@@ -6,6 +6,7 @@ from plotly.subplots import make_subplots
 import numpy as np
 from datetime import datetime
 import warnings
+import io
 warnings.filterwarnings('ignore')
 
 # Set page config
@@ -16,66 +17,159 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enhanced Custom CSS
+# Enhanced Modern Blue Theme CSS
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
-    .main-header {
-        font-family: 'Poppins', sans-serif;
-        font-size: 3.5rem;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    /* Global Styles */
+    .main {
+        padding: 0;
+        background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
     }
     
-    .subtitle {
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.3rem;
-        text-align: center;
-        color: #555;
-        margin-bottom: 2rem;
-        font-weight: 400;
+    /* Sidebar Enhanced Styling */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        width: 320px;
     }
     
-    .section-header {
-        font-family: 'Poppins', sans-serif;
-        font-size: 2.2rem;
+    section[data-testid="stSidebar"] > div {
+        padding: 2rem 1.5rem;
+    }
+    
+    section[data-testid="stSidebar"] .stMarkdown {
+        color: white;
+    }
+    
+    section[data-testid="stSidebar"] .stSelectbox label {
+        color: white !important;
+        font-size: 14px !important;
         font-weight: 600;
-        color: #2c3e50;
-        margin: 3rem 0 1.5rem 0;
-        padding-bottom: 0.8rem;
-        border-bottom: 4px solid #3498db;
-        position: relative;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
     
-    .section-header::after {
+    section[data-testid="stSidebar"] .stSelectbox > div > div {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+    }
+    
+    section[data-testid="stSidebar"] .stSelectbox > div > div > div {
+        color: white !important;
+        font-weight: 500;
+    }
+    
+    /* Sidebar Cards */
+    .sidebar-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    
+    .sidebar-card h3 {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    .sidebar-card p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0.5rem 0;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    .sidebar-card .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    .sidebar-card .info-label {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .sidebar-card .info-value {
+        color: white;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    /* Main Header */
+    .main-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        padding: 3rem 2rem;
+        border-radius: 0 0 30px 30px;
+        margin: -1rem -1rem 2rem -1rem;
+        box-shadow: 0 10px 40px rgba(30, 64, 175, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .main-header::before {
         content: '';
         position: absolute;
-        bottom: -4px;
-        left: 0;
-        width: 60px;
-        height: 4px;
-        background: linear-gradient(90deg, #e74c3c, #f39c12);
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 6s ease-in-out infinite;
     }
     
-    .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem 1.5rem;
-        border-radius: 20px;
+    @keyframes pulse {
+        0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+        50% { transform: scale(1.1) rotate(180deg); opacity: 0.8; }
+    }
+    
+    .main-title {
+        font-family: 'Inter', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
         color: white;
         text-align: center;
-        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        margin-bottom: 1.5rem;
-        transform: translateY(0);
+        margin: 0;
+        text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .main-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.9);
+        text-align: center;
+        margin-top: 0.5rem;
+        font-weight: 400;
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Metric Cards */
+    .metric-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
         transition: all 0.3s ease;
+        height: 100%;
         position: relative;
         overflow: hidden;
     }
@@ -83,55 +177,162 @@ st.markdown("""
     .metric-card::before {
         content: '';
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-        transform: rotate(45deg);
-        transition: all 0.3s ease;
-        opacity: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1e40af, #3b82f6, #60a5fa);
+        border-radius: 20px 20px 0 0;
     }
     
     .metric-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 25px 50px rgba(102, 126, 234, 0.4);
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(30, 64, 175, 0.2);
+        border-color: #3b82f6;
     }
     
-    .metric-card:hover::before {
-        opacity: 1;
-        animation: shimmer 1.5s ease-in-out;
-    }
-    
-    @keyframes shimmer {
-        0% { transform: translateX(-100%) rotate(45deg); }
-        100% { transform: translateX(100%) rotate(45deg); }
+    .metric-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #3b82f6, #1e40af);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 16px rgba(30, 64, 175, 0.3);
     }
     
     .metric-value {
-        font-family: 'Poppins', sans-serif;
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 0.8rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0.5rem 0;
+        font-family: 'Inter', sans-serif;
     }
     
     .metric-label {
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.1rem;
-        opacity: 0.95;
-        font-weight: 500;
+        font-size: 0.95rem;
+        color: #64748b;
+        font-weight: 600;
         line-height: 1.4;
     }
     
-    .chart-container {
-        background: rgba(255, 255, 255, 0.95);
+    .metric-change {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 0.75rem;
+        padding: 0.4rem 1rem;
+        border-radius: 25px;
+        display: inline-block;
+    }
+    
+    .positive {
+        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+        color: #166534;
+    }
+    
+    .negative {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #991b1b;
+    }
+    
+    /* Sector Grid */
+    .sector-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+    
+    .sector-card {
+        background: white;
+        border-radius: 24px;
         padding: 2.5rem;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        margin-bottom: 2.5rem;
-        border: 1px solid rgba(0,0,0,0.05);
-        backdrop-filter: blur(10px);
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid #e2e8f0;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+    
+    .sector-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1e40af, #3b82f6, #60a5fa);
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+    }
+    
+    .sector-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 20px 60px rgba(30, 64, 175, 0.25);
+        border-color: #3b82f6;
+    }
+    
+    .sector-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .sector-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        display: block;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+    
+    .sector-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .sector-desc {
+        font-size: 1rem;
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+    
+    .sector-status {
+        display: inline-block;
+        padding: 0.6rem 1.5rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-available {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    }
+    
+    .status-coming {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+    }
+    
+    /* Chart Container */
+    .chart-container {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
         position: relative;
         overflow: hidden;
     }
@@ -142,784 +343,1122 @@ st.markdown("""
         top: 0;
         left: 0;
         right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        height: 3px;
+        background: linear-gradient(90deg, #1e40af, #3b82f6, #60a5fa);
+        border-radius: 24px 24px 0 0;
     }
     
     .chart-title {
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.8rem;
-        font-weight: 600;
-        color: #2c3e50;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
         margin-bottom: 1.5rem;
+        font-family: 'Inter', sans-serif;
         text-align: center;
-        position: relative;
     }
     
-    .sidebar-section {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        padding: 1.5rem;
-        border-radius: 15px;
-        margin-bottom: 1.5rem;
-        border-left: 5px solid #3498db;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
-    
-    .sidebar-title {
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 1rem;
-    }
-    
-    .stats-overview {
-        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-        padding: 3rem 2rem;
-        border-radius: 25px;
-        color: white;
+    /* Upload Section */
+    .upload-section {
+        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        border: 3px dashed #3b82f6;
+        border-radius: 24px;
+        padding: 4rem;
         text-align: center;
-        margin: 2rem 0;
-        box-shadow: 0 20px 40px rgba(116, 185, 255, 0.3);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .stats-overview::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(180deg); }
-    }
-    
-    .sector-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin: 2rem 0;
-    }
-    
-    .sector-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        margin: 3rem 0;
         transition: all 0.3s ease;
-        border: 1px solid rgba(0,0,0,0.05);
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
     }
     
-    .sector-card::before {
+    .upload-section:hover {
+        border-color: #1e40af;
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    }
+    
+    .upload-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        color: #3b82f6;
+    }
+    
+    .upload-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .upload-desc {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+    
+    /* Buttons */
+    .stButton > button {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-shadow: 0 4px 16px rgba(30, 64, 175, 0.3);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(30, 64, 175, 0.4);
+        background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    }
+    
+    /* File Uploader */
+    .stFileUploader > div > div {
+        background: rgba(59, 130, 246, 0.1);
+        border: 2px dashed #3b82f6;
+        border-radius: 16px;
+        padding: 2rem;
+    }
+    
+    /* Data Tables */
+    .stDataFrame > div {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Section Titles */
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 4rem 0 2rem 0;
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+        position: relative;
+    }
+    
+    .section-title::after {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
         height: 4px;
-        background: linear-gradient(90deg, #ff7675, #fd79a8, #fdcb6e);
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-    }
-    
-    .sector-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    }
-    
-    .sector-card:hover::before {
-        transform: scaleX(1);
-    }
-    
-    .table-container {
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        margin: 2rem 0;
-    }
-    
-    .stSelectbox > div > div > div {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 10px;
+        background: linear-gradient(90deg, #1e40af, #3b82f6);
+        border-radius: 2px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Sector definitions
+# Initialize session state
+if 'selected_sector' not in st.session_state:
+    st.session_state.selected_sector = 'beranda'
+if 'uploaded_data' not in st.session_state:
+    st.session_state.uploaded_data = {}
+
+# Configuration
 SECTORS = {
-    "overview": {
-        "name": "Dashboard Umum",
+    "beranda": {
+        "name": "Beranda",
         "icon": "🏠",
-        "description": "Ringkasan statistik pembangunan Aceh"
-    },
-    "sejarah": {
-        "name": "Sejarah", 
-        "icon": "📖",
-        "description": "Sejarah Aceh"
+        "description": "Dashboard utama pembangunan Aceh",
+        "available": True
     },
     "geografis": {
-        "name": "Geografis", 
+        "name": "Geografis",
         "icon": "🗺️",
-        "description": "Kondisi geografis dan wilayah"
+        "description": "Kondisi geografis dan wilayah Aceh",
+        "available": False
     },
     "pemerintahan": {
         "name": "Pemerintahan",
-        "icon": "🏛️", 
-        "description": "Struktur dan administrasi pemerintahan"
+        "icon": "🏛️",
+        "description": "Struktur dan administrasi pemerintahan",
+        "available": False
     },
     "pertanian": {
         "name": "Pertanian",
         "icon": "🌾",
-        "description": "Sektor pertanian dan perkebunan"
+        "description": "Sektor pertanian dan perkebunan",
+        "available": False
     },
     "listrik_gas_air": {
-        "name": "Listrik, Gas, dan Air",
+        "name": "Listrik, Gas & Air",
         "icon": "⚡",
-        "description": "Infrastruktur energi dan air"
+        "description": "Infrastruktur energi dan utilitas",
+        "available": False
     },
     "industri": {
         "name": "Industri",
         "icon": "🏭",
-        "description": "Sektor industri dan manufaktur"
+        "description": "Sektor industri dan manufaktur",
+        "available": False
     },
     "perdagangan": {
         "name": "Perdagangan",
         "icon": "🛒",
-        "description": "Aktivitas perdagangan dan komersial"
+        "description": "Aktivitas perdagangan dan komersial",
+        "available": False
     },
     "inflasi_harga": {
-        "name": "Inflasi dan Harga",
+        "name": "Inflasi & Harga",
         "icon": "💰",
-        "description": "Indeks harga dan inflasi"
+        "description": "Indeks harga dan tingkat inflasi",
+        "available": False
     },
     "transportasi": {
-        "name": "Transportasi, Telekomunikasi, dan Pariwisata",
+        "name": "Transportasi",
         "icon": "🚗",
-        "description": "Infrastruktur transportasi dan pariwisata"
+        "description": "Infrastruktur transportasi dan pariwisata",
+        "available": False
     },
     "neraca_regional": {
         "name": "Neraca Regional",
         "icon": "📊",
-        "description": "PDRB dan indikator ekonomi regional"
+        "description": "PDRB dan indikator ekonomi regional",
+        "available": True
     },
     "keuangan": {
-        "name": "Keuangan, Perbankan, dan Investasi",
+        "name": "Keuangan",
         "icon": "🏦",
-        "description": "Sektor keuangan dan investasi"
+        "description": "Sektor keuangan dan investasi",
+        "available": False
     },
     "penduduk": {
-        "name": "Penduduk dan Ketenagakerjaan",
+        "name": "Penduduk",
         "icon": "👥",
-        "description": "Demografi dan ketenagakerjaan"
+        "description": "Demografi dan ketenagakerjaan",
+        "available": False
     },
     "sosial": {
-        "name": "Sosial dan Kesejahteraan Rakyat",
+        "name": "Sosial",
         "icon": "❤️",
-        "description": "Kesehatan, pendidikan, dan kesejahteraan"
+        "description": "Kesehatan dan kesejahteraan",
+        "available": False
     },
     "perumahan": {
         "name": "Perumahan",
         "icon": "🏘️",
-        "description": "Kondisi perumahan dan permukiman"
+        "description": "Kondisi perumahan dan permukiman",
+        "available": False
     }
 }
 
-# Load data function
+# Load datasets function
 @st.cache_data
-def load_data():
-    """Load and process all dataset files"""
+def load_datasets():
+    """Load all available datasets"""
     try:
-        data_dict = {
-            'pdrb': pd.read_csv('data/PDRB ADHB dan ADHK dengan Migas dan Non-Migas 10.1.csv', sep=';'),
-            'growth': pd.read_csv('data/Pertumbuhan Ekonomi Aceh Migas dan Non-Migas 10.2.csv', sep=';'),
-            'sector_migas': pd.read_csv('data/Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas 10.3.csv', sep=';'),
-            'sector_nonmigas': pd.read_csv('data/Kontribusi PDRB Aceh Menurut Kelompok Sektor Non-Migas 10.4.csv', sep=';'),
-            'expenditure': pd.read_csv('data/Kontribusi PDRB Menurut Kelompok Pengeluaran 10.5.csv', sep=';'),
-            'percapita': pd.read_csv('data/PDRB Per Kapita Aceh 10.6.csv', sep=';'),
-            'regional_contrib': pd.read_csv('data/Kontribusi Kabupaten atau Kota terhadap PDRB 10.7.csv', sep=';'),
-            'percapita_kab': pd.read_csv('data/PDRB Per Kapita Kabupaten atau Kota 10.8.csv', sep=';')
+        datasets = {}
+        file_mappings = {
+            'pdrb': 'PDRB ADHB dan ADHK dengan Migas dan Non-Migas 10.1.csv',
+            'growth': 'Pertumbuhan Ekonomi Aceh Migas dan Non-Migas 10.2.csv',
+            'sector_migas': 'Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas 10.3.csv',
+            'sector_nonmigas': 'Kontribusi PDRB Aceh Menurut Kelompok Sektor Non-Migas 10.4.csv',
+            'expenditure': 'Kontribusi PDRB Menurut Kelompok Pengeluaran 10.5.csv',
+            'percapita': 'PDRB Per Kapita Aceh 10.6.csv',
+            'regional_contrib': 'Kontribusi Kabupaten atau Kota terhadap PDRB 10.7.csv',
+            'percapita_kab': 'PDRB Per Kapita Kabupaten atau Kota 10.8.csv'
         }
-        return data_dict
+        
+        for key, filename in file_mappings.items():
+            try:
+                datasets[key] = pd.read_csv(f'data/{filename}', sep=';')
+            except:
+                pass
+        
+        return datasets
     except Exception as e:
-        st.error(f"Error loading data: {str(e)}")
-        return None
+        st.error(f"Error loading datasets: {e}")
+        return {}
 
-def show_overview_dashboard():
-    """Display overview dashboard with general statistics"""
-    st.markdown('<h1 class="main-header">Dashboard Pembangunan Provinsi Aceh</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">Visualisasi Data Pembangunan Multi-Sektor dari Masa ke Masa (1975-2013)</p>', unsafe_allow_html=True)
+def format_number(value, format_type="number"):
+    """Format numbers for display"""
+    if pd.isna(value):
+        return "N/A"
     
-    # Overview stats
+    try:
+        value = float(value)
+    except:
+        return str(value)
+    
+    if format_type == "currency":
+        if abs(value) >= 1e6:
+            return f"{value/1e6:.1f}M"
+        elif abs(value) >= 1e3:
+            return f"{value/1e3:.1f}K"
+        else:
+            return f"{value:.0f}"
+    elif format_type == "percentage":
+        return f"{value:.2f}%"
+    else:
+        return f"{value:,.0f}"
+
+def create_metric_card(icon, value, label, change=None, change_type="positive"):
+    """Create a metric card HTML"""
+    change_html = ""
+    if change:
+        change_class = "positive" if change_type == "positive" else "negative"
+        change_html = f'<div class="metric-change {change_class}">{change}</div>'
+    
+    return f"""
+    <div class="metric-card">
+        <div class="metric-icon">{icon}</div>
+        <div class="metric-value">{value}</div>
+        <div class="metric-label">{label}</div>
+        {change_html}
+    </div>
+    """
+
+def auto_generate_charts(df, file_name):
+    """Auto-generate appropriate charts based on data structure"""
+    charts = []
+    
+    # Detect column types
+    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+    categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
+    
+    # Look for common patterns
+    year_cols = [col for col in df.columns if 'tahun' in col.lower() or 'year' in col.lower()]
+    time_cols = [col for col in df.columns if any(word in col.lower() for word in ['date', 'time', 'periode'])]
+    
+    # Chart 1: Time series if year column exists
+    if year_cols and numeric_cols:
+        year_col = year_cols[0]
+        for num_col in numeric_cols[:3]:  # Limit to first 3 numeric columns
+            try:
+                if df[year_col].dtype in ['int64', 'float64'] and df[num_col].dtype in ['int64', 'float64']:
+                    fig = px.line(df, x=year_col, y=num_col, 
+                                title=f"Trend {num_col} over {year_col}")
+                    fig.update_layout(height=400)
+                    charts.append(("line", f"Trend {num_col}", fig))
+            except:
+                continue
+    
+    # Chart 2: Bar chart for categorical vs numeric
+    if categorical_cols and numeric_cols:
+        cat_col = categorical_cols[0]
+        num_col = numeric_cols[0]
+        try:
+            # Get latest data or aggregate
+            if len(df) > 50:
+                df_sample = df.groupby(cat_col)[num_col].mean().reset_index().head(15)
+            else:
+                df_sample = df.head(15)
+            
+            fig = px.bar(df_sample, x=cat_col, y=num_col,
+                        title=f"{num_col} by {cat_col}")
+            fig.update_layout(height=400, xaxis_tickangle=-45)
+            charts.append(("bar", f"{num_col} by {cat_col}", fig))
+        except:
+            pass
+    
+    # Chart 3: Distribution chart
+    if numeric_cols:
+        num_col = numeric_cols[0]
+        try:
+            fig = px.histogram(df, x=num_col, nbins=20,
+                             title=f"Distribution of {num_col}")
+            fig.update_layout(height=400)
+            charts.append(("histogram", f"Distribution {num_col}", fig))
+        except:
+            pass
+    
+    # Chart 4: Correlation heatmap if multiple numeric columns
+    if len(numeric_cols) > 2:
+        try:
+            corr_matrix = df[numeric_cols].corr()
+            fig = px.imshow(corr_matrix, text_auto=True, aspect="auto",
+                          title="Correlation Matrix")
+            fig.update_layout(height=400)
+            charts.append(("heatmap", "Correlation Matrix", fig))
+        except:
+            pass
+    
+    return charts
+
+def show_beranda(datasets):
+    """Enhanced homepage without highlights section"""
+    # Header
     st.markdown("""
-    <div class="stats-overview">
-        <h2 style="margin-bottom: 2rem; font-size: 2.5rem; font-weight: 700;">Statistik Umum Pembangunan Aceh</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem;">
-            <div>
-                <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">39</div>
-                <div style="font-size: 1.2rem; opacity: 0.9;">Tahun Data Historis</div>
-            </div>
-            <div>
-                <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">14</div>
-                <div style="font-size: 1.2rem; opacity: 0.9;">Sektor Pembangunan</div>
-            </div>
-            <div>
-                <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">23</div>
-                <div style="font-size: 1.2rem; opacity: 0.9;">Kabupaten/Kota</div>
-            </div>
-            <div>
-                <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">1975-2013</div>
-                <div style="font-size: 1.2rem; opacity: 0.9;">Periode Data</div>
-            </div>
-        </div>
+    <div class="main-header">
+        <h1 class="main-title">Dashboard Pembangunan Provinsi Aceh</h1>
+        <p class="main-subtitle">Visualisasi Data Pembangunan Multi-Sektor (1958-2014)</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Sector grid
-    st.markdown('<h2 class="section-header">Pilih Sektor untuk Analisis Mendalam</h2>', unsafe_allow_html=True)
+    # Key Metrics
+    if datasets:
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            if 'pdrb' in datasets:
+                latest_pdrb = datasets['pdrb'][datasets['pdrb']['tahun'] == datasets['pdrb']['tahun'].max()]
+                total_pdrb = latest_pdrb['PDRB ADHB'].sum()
+                st.markdown(create_metric_card(
+                    "💰", 
+                    format_number(total_pdrb, 'currency'),
+                    "Total PDRB ADHB (Juta Rupiah)",
+                    "Tahun 2013",
+                    "positive"
+                ), unsafe_allow_html=True)
+        
+        with col2:
+            if 'growth' in datasets:
+                avg_growth = datasets['growth']['pertumbuhan ekonomi'].mean()
+                st.markdown(create_metric_card(
+                    "📈",
+                    format_number(avg_growth, 'percentage'),
+                    "Rata-rata Pertumbuhan",
+                    "Periode 1976-2013",
+                    "positive"
+                ), unsafe_allow_html=True)
+        
+        with col3:
+            if 'percapita' in datasets:
+                latest_pc = datasets['percapita'][datasets['percapita']['tahun'] == datasets['percapita']['tahun'].max()]
+                avg_pc = latest_pc['ADHB'].mean()
+                st.markdown(create_metric_card(
+                    "👥",
+                    format_number(avg_pc),
+                    "PDRB Per Kapita",
+                    "Tahun 2013",
+                    "positive"
+                ), unsafe_allow_html=True)
+        
+        with col4:
+            if 'regional_contrib' in datasets:
+                kab_count = datasets['regional_contrib']['bps_nama_kabupaten_kota'].nunique()
+                st.markdown(create_metric_card(
+                    "🗺️",
+                    str(kab_count),
+                    "Kabupaten/Kota",
+                    "Wilayah Administratif"
+                ), unsafe_allow_html=True)
     
-    # Create grid for sectors (excluding overview)
-    sectors_list = [(k, v) for k, v in SECTORS.items() if k != "overview"]
+    # Sector Navigation
+    st.markdown('<h2 class="section-title">Eksplorasi Sektor Pembangunan</h2>', unsafe_allow_html=True)
+    
+    # Create sector grid
+    st.markdown('<div class="sector-grid">', unsafe_allow_html=True)
     
     cols = st.columns(3)
-    for i, (sector_key, sector_info) in enumerate(sectors_list):
+    sectors_list = [k for k, v in SECTORS.items() if k != 'beranda']
+    
+    for i, sector_key in enumerate(sectors_list):
+        sector = SECTORS[sector_key]
         col_idx = i % 3
+        
         with cols[col_idx]:
-            if sector_key == "neraca_regional":
-                if st.button(f"{sector_info['icon']} {sector_info['name']}", key=f"btn_{sector_key}", use_container_width=True):
+            status_class = "status-available" if sector["available"] else "status-coming"
+            status_text = "✅ Tersedia" if sector["available"] else "🔄 Coming Soon"
+            
+            st.markdown(f"""
+            <div class="sector-card">
+                <div class="sector-icon">{sector["icon"]}</div>
+                <div class="sector-title">{sector["name"]}</div>
+                <div class="sector-desc">{sector["description"]}</div>
+                <div class="sector-status {status_class}">{status_text}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            if sector["available"]:
+                if st.button(f"Buka {sector['name']}", key=f"btn_{sector_key}"):
                     st.session_state.selected_sector = sector_key
                     st.rerun()
-                st.caption(sector_info['description'])
-            else:
-                st.button(f"{sector_info['icon']} {sector_info['name']}", key=f"btn_{sector_key}", disabled=True, use_container_width=True)
-                st.caption(f"{sector_info['description']} (Coming Soon)")
-
-def create_pdrb_chart(data, title):
-    """Create PDRB chart"""
-    migas_data = data[data['migas dan non migas'] == 'Migas'].copy()
-    nonmigas_data = data[data['migas dan non migas'] == 'NonMigas'].copy()
     
-    fig = make_subplots(
-        rows=1, cols=2,
-        subplot_titles=('PDRB Atas Dasar Harga Berlaku (ADHB)', 'PDRB Atas Dasar Harga Konstan (ADHK)'),
-        specs=[[{"secondary_y": False}, {"secondary_y": False}]]
-    )
-    
-    # ADHB
-    fig.add_trace(
-        go.Scatter(x=migas_data['tahun'], y=migas_data['PDRB ADHB'], 
-                  name='Migas ADHB', line=dict(color='#e74c3c', width=3),
-                  marker=dict(size=6)),
-        row=1, col=1
-    )
-    fig.add_trace(
-        go.Scatter(x=nonmigas_data['tahun'], y=nonmigas_data['PDRB ADHB'],
-                  name='Non-Migas ADHB', line=dict(color='#3498db', width=3),
-                  marker=dict(size=6)),
-        row=1, col=1
-    )
-    
-    # ADHK
-    fig.add_trace(
-        go.Scatter(x=migas_data['tahun'], y=migas_data['PDRB ADHK'],
-                  name='Migas ADHK', line=dict(color='#e67e22', width=3),
-                  marker=dict(size=6)),
-        row=1, col=2
-    )
-    fig.add_trace(
-        go.Scatter(x=nonmigas_data['tahun'], y=nonmigas_data['PDRB ADHK'],
-                  name='Non-Migas ADHK', line=dict(color='#2980b9', width=3),
-                  marker=dict(size=6)),
-        row=1, col=2
-    )
-    
-    fig.update_layout(
-        height=500,
-        showlegend=True,
-        title_text=title,
-        title_x=0.5,
-        title_font_size=18,
-        font_family="Poppins"
-    )
-    
-    fig.update_xaxes(title_text="Tahun")
-    fig.update_yaxes(title_text="Nilai (Juta Rupiah)")
-    
-    return fig
-
-def create_growth_chart(data, title):
-    """Create economic growth chart"""
-    migas_growth = data[data['migas dan non migas'] == 'Migas'].copy()
-    nonmigas_growth = data[data['migas dan non migas'] == 'NonMigas'].copy()
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scatter(
-        x=migas_growth['tahun'], 
-        y=migas_growth['pertumbuhan ekonomi'],
-        mode='lines+markers',
-        name='Pertumbuhan Sektor Migas',
-        line=dict(color='#e74c3c', width=3),
-        marker=dict(size=8),
-        fill='tonexty',
-        fillcolor='rgba(231, 76, 60, 0.1)'
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=nonmigas_growth['tahun'], 
-        y=nonmigas_growth['pertumbuhan ekonomi'],
-        mode='lines+markers',
-        name='Pertumbuhan Sektor Non-Migas',
-        line=dict(color='#3498db', width=3),
-        marker=dict(size=8),
-        fill='tonexty',
-        fillcolor='rgba(52, 152, 219, 0.1)'
-    ))
-    
-    fig.add_hline(y=0, line_dash="dash", line_color="rgba(0,0,0,0.3)", 
-                  annotation_text="Baseline (0%)", annotation_position="right")
-    
-    fig.update_layout(
-        title=title,
-        xaxis_title="Tahun",
-        yaxis_title="Tingkat Pertumbuhan (%)",
-        height=500,
-        hovermode='x unified',
-        font_family="Poppins",
-        showlegend=True
-    )
-    
-    return fig
-
-def create_sector_contribution_chart(data, title_suffix, sector_col):
-    """Create sector contribution chart"""
-    sectors = data[sector_col].unique()
-    
-    fig = go.Figure()
-    colors = px.colors.qualitative.Set3
-    
-    for i, sector in enumerate(sectors):
-        sector_data = data[data[sector_col] == sector]
-        fig.add_trace(go.Scatter(
-            x=sector_data['tahun'],
-            y=sector_data['kontribusi PDRB'],
-            mode='lines+markers',
-            name=sector,
-            line=dict(color=colors[i % len(colors)], width=3),
-            marker=dict(size=6),
-            stackgroup='one' if 'Pengeluaran' not in title_suffix else None
-        ))
-    
-    fig.update_layout(
-        title=f"Kontribusi {title_suffix} terhadap PDRB Provinsi Aceh",
-        xaxis_title="Tahun",
-        yaxis_title="Kontribusi (%)",
-        height=500,
-        hovermode='x unified',
-        font_family="Poppins"
-    )
-    
-    return fig
-
-def create_percapita_chart(data, title):
-    """Create per capita chart"""
-    migas_pc = data[data['migas dan non migas'] == 'Migas'].copy()
-    nonmigas_pc = data[data['migas dan non migas'] == 'NonMigas'].copy()
-    
-    fig = make_subplots(
-        rows=1, cols=2,
-        subplot_titles=('PDRB Per Kapita ADHB', 'PDRB Per Kapita ADHK')
-    )
-    
-    fig.add_trace(
-        go.Scatter(x=migas_pc['tahun'], y=migas_pc['ADHB'], name='Migas ADHB',
-                  line=dict(color='#e74c3c', width=3), marker=dict(size=6)), row=1, col=1
-    )
-    fig.add_trace(
-        go.Scatter(x=nonmigas_pc['tahun'], y=nonmigas_pc['ADHB'], name='Non-Migas ADHB',
-                  line=dict(color='#3498db', width=3), marker=dict(size=6)), row=1, col=1
-    )
-    
-    fig.add_trace(
-        go.Scatter(x=migas_pc['tahun'], y=migas_pc['ADHK'], name='Migas ADHK',
-                  line=dict(color='#e67e22', width=3), marker=dict(size=6)), row=1, col=2
-    )
-    fig.add_trace(
-        go.Scatter(x=nonmigas_pc['tahun'], y=nonmigas_pc['ADHK'], name='Non-Migas ADHK',
-                  line=dict(color='#2980b9', width=3), marker=dict(size=6)), row=1, col=2
-    )
-    
-    fig.update_layout(
-        height=500,
-        title_text=title,
-        title_x=0.5,
-        font_family="Poppins"
-    )
-    
-    fig.update_xaxes(title_text="Tahun")
-    fig.update_yaxes(title_text="Nilai Per Kapita (Juta Rupiah)")
-    
-    return fig
-
-def create_regional_chart(data, title, value_col):
-    """Create regional contribution chart"""
-    # Get latest year data
-    latest_year = data['tahun'].max()
-    latest_data = data[data['tahun'] == latest_year]
-    
-    migas_data = latest_data[latest_data['migas dan non migas'] == 'Migas']
-    nonmigas_data = latest_data[latest_data['migas dan non migas'] == 'NonMigas']
-    
-    fig = make_subplots(
-        rows=1, cols=2,
-        subplot_titles=(f'Kontribusi Migas ({latest_year})', f'Kontribusi Non-Migas ({latest_year})'),
-        specs=[[{"type": "bar"}, {"type": "bar"}]]
-    )
-    
-    fig.add_trace(
-        go.Bar(x=migas_data['bps_nama_kabupaten_kota'], y=migas_data[value_col],
-               name='Migas', marker_color='#e74c3c'), row=1, col=1
-    )
-    
-    fig.add_trace(
-        go.Bar(x=nonmigas_data['bps_nama_kabupaten_kota'], y=nonmigas_data[value_col],
-               name='Non-Migas', marker_color='#3498db'), row=1, col=2
-    )
-    
-    fig.update_layout(
-        height=600,
-        title_text=title,
-        title_x=0.5,
-        font_family="Poppins"
-    )
-    
-    fig.update_xaxes(tickangle=45)
-    
-    return fig
-
-def show_neraca_regional_dashboard(data_dict, year_range):
-    """Display Neraca Regional dashboard with all 8 charts"""
-    st.markdown('<h1 class="section-header">📊 Neraca Regional Provinsi Aceh</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">Analisis Komprehensif Produk Domestik Regional Bruto dan Indikator Ekonomi</p>', unsafe_allow_html=True)
-    
-    # Filter data by year range
-    filtered_data = {}
-    for key, df in data_dict.items():
-        if 'tahun' in df.columns:
-            filtered_data[key] = df[(df['tahun'] >= year_range[0]) & (df['tahun'] <= year_range[1])]
-        else:
-            filtered_data[key] = df
-    
-    # Key metrics row
-    col1, col2, col3, col4 = st.columns(4)
-    
-    # Calculate metrics from filtered data
-    pdrb_data = filtered_data['pdrb']
-    latest_year_data = pdrb_data[pdrb_data['tahun'] == pdrb_data['tahun'].max()]
-    
-    migas_adhb = latest_year_data[latest_year_data['migas dan non migas'] == 'Migas']['PDRB ADHB'].iloc[0] if not latest_year_data.empty else 0
-    nonmigas_adhb = latest_year_data[latest_year_data['migas dan non migas'] == 'NonMigas']['PDRB ADHB'].iloc[0] if not latest_year_data.empty else 0
-    total_pdrb = migas_adhb + nonmigas_adhb
-    
-    growth_data = filtered_data['growth']
-    avg_growth = growth_data['pertumbuhan ekonomi'].mean() if not growth_data.empty else 0
-    
-    with col1:
-        st.markdown(f'''
-        <div class="metric-card">
-            <div class="metric-value">{total_pdrb:,.0f}</div>
-            <div class="metric-label">Total PDRB ADHB<br>(Juta Rupiah)</div>
-        </div>
-        ''', unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown(f'''
-        <div class="metric-card">
-            <div class="metric-value">{avg_growth:.2f}%</div>
-            <div class="metric-label">Rata-rata<br>Pertumbuhan Ekonomi</div>
-        </div>
-        ''', unsafe_allow_html=True)
-    
-    with col3:
-        migas_contribution = (migas_adhb / total_pdrb * 100) if total_pdrb > 0 else 0
-        st.markdown(f'''
-        <div class="metric-card">
-            <div class="metric-value">{migas_contribution:.1f}%</div>
-            <div class="metric-label">Kontribusi Sektor<br>Migas</div>
-        </div>
-        ''', unsafe_allow_html=True)
-    
-    with col4:
-        nonmigas_contribution = (nonmigas_adhb / total_pdrb * 100) if total_pdrb > 0 else 0
-        st.markdown(f'''
-        <div class="metric-card">
-            <div class="metric-value">{nonmigas_contribution:.1f}%</div>
-            <div class="metric-label">Kontribusi Sektor<br>Non-Migas</div>
-        </div>
-        ''', unsafe_allow_html=True)
-    
-    # Chart 1: PDRB ADHB & ADHK
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-    st.markdown('<h3 class="chart-title">10.1 Produk Domestik Regional Bruto (PDRB) Atas Dasar Harga Berlaku dan Konstan dengan Migas dan Non-Migas</h3>', unsafe_allow_html=True)
-    pdrb_fig = create_pdrb_chart(filtered_data['pdrb'], "PDRB Provinsi Aceh: Migas vs Non-Migas")
-    st.plotly_chart(pdrb_fig, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+def show_neraca_regional(datasets):
+    """Show Enhanced Neraca Regional dashboard with comprehensive visualizations"""
+    st.markdown("""
+    <div class="main-header">
+        <h1 class="main-title">Neraca Regional Provinsi Aceh</h1>
+        <p class="main-subtitle">Analisis Komprehensif PDRB dan Indikator Ekonomi Regional (1975-2013)</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    # Chart 2: Economic Growth
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-    st.markdown('<h3 class="chart-title">10.2 Pertumbuhan Ekonomi Aceh Sektor Migas dan Non-Migas</h3>', unsafe_allow_html=True)
-    growth_fig = create_growth_chart(filtered_data['growth'], "Pertumbuhan Ekonomi Provinsi Aceh")
-    st.plotly_chart(growth_fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Chart 3 & 4: Sector Contributions (side by side)
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown('<h3 class="chart-title">10.3 Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas</h3>', unsafe_allow_html=True)
-        sector_migas_fig = create_sector_contribution_chart(
-            filtered_data['sector_migas'], "Kelompok Sektor Dengan Migas", 'kelompok sektor dengan migas'
-        )
-        st.plotly_chart(sector_migas_fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown('<h3 class="chart-title">10.4 Kontribusi PDRB Aceh Menurut Kelompok Sektor Non-Migas</h3>', unsafe_allow_html=True)
-        sector_nonmigas_fig = create_sector_contribution_chart(
-            filtered_data['sector_nonmigas'], "Kelompok Sektor Non-Migas", 'kelompok sektor dengan non migas'
-        )
-        st.plotly_chart(sector_nonmigas_fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Chart 5: Expenditure Contribution
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-    st.markdown('<h3 class="chart-title">10.5 Kontribusi PDRB Menurut Kelompok Pengeluaran</h3>', unsafe_allow_html=True)
-    expenditure_fig = create_sector_contribution_chart(
-        filtered_data['expenditure'], "Kelompok Pengeluaran", 'kelompok pengeluaran'
-    )
-    st.plotly_chart(expenditure_fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Chart 6: Per Capita PDRB
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-    st.markdown('<h3 class="chart-title">10.6 PDRB Per Kapita Aceh</h3>', unsafe_allow_html=True)
-    percapita_fig = create_percapita_chart(filtered_data['percapita'], "PDRB Per Kapita Provinsi Aceh")
-    st.plotly_chart(percapita_fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Chart 7 & 8: Regional Analysis (side by side)
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown('<h3 class="chart-title">10.7 Kontribusi Kabupaten/Kota terhadap PDRB</h3>', unsafe_allow_html=True)
-        regional_contrib_fig = create_regional_chart(
-            filtered_data['regional_contrib'], "Kontribusi Regional terhadap PDRB", 'kontribusi PDRB'
-        )
-        st.plotly_chart(regional_contrib_fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown('<h3 class="chart-title">10.8 PDRB Per Kapita Kabupaten/Kota</h3>', unsafe_allow_html=True)
-        percapita_kab_fig = create_regional_chart(
-            filtered_data['percapita_kab'], "PDRB Per Kapita Regional", 'kontribusi PDRB'
-        )
-        st.plotly_chart(percapita_kab_fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Data Tables Section
-    st.markdown('<h2 class="section-header">Data Tables</h2>', unsafe_allow_html=True)
-    
-    # Create tabs for different data tables
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "PDRB Data", "Pertumbuhan & Kontribusi", "Per Kapita", "Data Regional"
-    ])
+    # Tabs for different views
+    tab1, tab2, tab3, tab4 = st.tabs(["📊 Overview", "📈 Trend Analysis", "🗺️ Regional Analysis", "📋 Data Tables"])
     
     with tab1:
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.subheader("Tabel PDRB ADHB dan ADHK")
-        pdrb_pivot = filtered_data['pdrb'].pivot_table(
-            index='tahun', 
-            columns='migas dan non migas', 
-            values=['PDRB ADHB', 'PDRB ADHK'], 
-            aggfunc='sum'
-        )
-        st.dataframe(pdrb_pivot, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        # Key metrics row
+        if 'pdrb' in datasets:
+            latest = datasets['pdrb'][datasets['pdrb']['tahun'] == datasets['pdrb']['tahun'].max()]
+            migas = latest[latest['migas dan non migas'] == 'Migas']['PDRB ADHB'].iloc[0]
+            nonmigas = latest[latest['migas dan non migas'] == 'NonMigas']['PDRB ADHB'].iloc[0]
+            total = migas + nonmigas
+            
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.markdown(create_metric_card("💰", format_number(total, 'currency'), "Total PDRB ADHB", "Juta Rupiah (2013)"), unsafe_allow_html=True)
+            
+            with col2:
+                st.markdown(create_metric_card("⛽", format_number(migas, 'currency'), "PDRB Migas", "Juta Rupiah (2013)"), unsafe_allow_html=True)
+            
+            with col3:
+                st.markdown(create_metric_card("🏭", format_number(nonmigas, 'currency'), "PDRB Non-Migas", "Juta Rupiah (2013)"), unsafe_allow_html=True)
+            
+            with col4:
+                ratio = (migas / total) * 100
+                st.markdown(create_metric_card("📊", f"{ratio:.1f}%", "Kontribusi Migas", "dari Total PDRB"), unsafe_allow_html=True)
         
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.subheader("Tabel Pertumbuhan Ekonomi")
-        growth_pivot = filtered_data['growth'].pivot_table(
-            index='tahun', 
-            columns='migas dan non migas', 
-            values='pertumbuhan ekonomi'
-        )
-        st.dataframe(growth_pivot, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        # Main overview charts
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if 'pdrb' in datasets:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown('<h3 class="chart-title">📈 Evolusi PDRB ADHB (1975-2013)</h3>', unsafe_allow_html=True)
+                
+                fig = px.line(datasets['pdrb'], x='tahun', y='PDRB ADHB', 
+                            color='migas dan non migas',
+                            color_discrete_map={'Migas': '#1e40af', 'NonMigas': '#3b82f6'},
+                            title="",
+                            labels={'PDRB ADHB': 'PDRB ADHB (Juta Rupiah)', 'tahun': 'Tahun'})
+                fig.update_traces(line=dict(width=3), marker=dict(size=6))
+                fig.update_layout(height=400, showlegend=True)
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col2:
+            if 'pdrb' in datasets:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown('<h3 class="chart-title">📊 PDRB ADHK (Harga Konstan)</h3>', unsafe_allow_html=True)
+                
+                fig = px.line(datasets['pdrb'], x='tahun', y='PDRB ADHK', 
+                            color='migas dan non migas',
+                            color_discrete_map={'Migas': '#dc2626', 'NonMigas': '#16a34a'},
+                            title="",
+                            labels={'PDRB ADHK': 'PDRB ADHK (Juta Rupiah)', 'tahun': 'Tahun'})
+                fig.update_traces(line=dict(width=3), marker=dict(size=6))
+                fig.update_layout(height=400, showlegend=True)
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Growth comparison
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if 'growth' in datasets:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown('<h3 class="chart-title">📈 Pertumbuhan Ekonomi (%)</h3>', unsafe_allow_html=True)
+                
+                fig = px.bar(datasets['growth'], x='tahun', y='pertumbuhan ekonomi',
+                           color='migas dan non migas',
+                           color_discrete_map={'Migas': '#1e40af', 'NonMigas': '#3b82f6'},
+                           title="",
+                           labels={'pertumbuhan ekonomi': 'Pertumbuhan (%)', 'tahun': 'Tahun'})
+                fig.update_layout(height=400, showlegend=True)
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col2:
+            if 'percapita' in datasets:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown('<h3 class="chart-title">👥 PDRB Per Kapita</h3>', unsafe_allow_html=True)
+                
+                fig = px.line(datasets['percapita'], x='tahun', y='ADHB', 
+                            color='migas dan non migas',
+                            color_discrete_map={'Migas': '#7c3aed', 'NonMigas': '#059669'},
+                            title="",
+                            labels={'ADHB': 'PDRB Per Kapita ADHB (Juta Rupiah)', 'tahun': 'Tahun'})
+                fig.update_traces(line=dict(width=3), marker=dict(size=6))
+                fig.update_layout(height=400, showlegend=True)
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
     
     with tab2:
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.subheader("Kontribusi Sektor dengan Migas")
-        st.dataframe(filtered_data['sector_migas'], use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<h2 style="text-align: center; margin-bottom: 2rem;">📈 Analisis Tren Komprehensif</h2>', unsafe_allow_html=True)
         
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.subheader("Kontribusi Sektor Non-Migas")
-        st.dataframe(filtered_data['sector_nonmigas'], use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        # Sector contributions with migas
+        col1, col2 = st.columns(2)
         
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.subheader("Kontribusi Kelompok Pengeluaran")
-        st.dataframe(filtered_data['expenditure'], use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        with col1:
+            if 'sector_migas' in datasets:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown('<h3 class="chart-title">🏭 Kontribusi Sektor (Dengan Migas)</h3>', unsafe_allow_html=True)
+                
+                fig = px.area(datasets['sector_migas'], x='tahun', y='kontribusi PDRB',
+                            color='kelompok sektor dengan migas',
+                            title="",
+                            labels={'kontribusi PDRB': 'Kontribusi (%)', 'tahun': 'Tahun'})
+                fig.update_layout(height=500, showlegend=True)
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col2:
+            if 'sector_nonmigas' in datasets:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown('<h3 class="chart-title">🌾 Kontribusi Sektor (Non-Migas)</h3>', unsafe_allow_html=True)
+                
+                fig = px.area(datasets['sector_nonmigas'], x='tahun', y='kontribusi PDRB',
+                            color='kelompok sektor dengan non migas',
+                            title="",
+                            labels={'kontribusi PDRB': 'Kontribusi (%)', 'tahun': 'Tahun'})
+                fig.update_layout(height=500, showlegend=True)
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Expenditure analysis
+        if 'expenditure' in datasets:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            st.markdown('<h3 class="chart-title">💰 Kontribusi PDRB Menurut Kelompok Pengeluaran</h3>', unsafe_allow_html=True)
+            
+            fig = px.area(datasets['expenditure'], x='tahun', y='kontribusi PDRB',
+                        color='kelompok pengeluaran',
+                        title="",
+                        labels={'kontribusi PDRB': 'Kontribusi (%)', 'tahun': 'Tahun'})
+            fig.update_layout(height=500, showlegend=True)
+            st.plotly_chart(fig, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Comparative trend analysis
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if 'pdrb' in datasets:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown('<h3 class="chart-title">⚖️ Rasio PDRB ADHB vs ADHK</h3>', unsafe_allow_html=True)
+                
+                df_ratio = datasets['pdrb'].copy()
+                df_ratio['ratio'] = df_ratio['PDRB ADHB'] / df_ratio['PDRB ADHK']
+                
+                fig = px.line(df_ratio, x='tahun', y='ratio',
+                            color='migas dan non migas',
+                            color_discrete_map={'Migas': '#dc2626', 'NonMigas': '#16a34a'},
+                            title="",
+                            labels={'ratio': 'Rasio ADHB/ADHK', 'tahun': 'Tahun'})
+                fig.update_traces(line=dict(width=3), marker=dict(size=6))
+                fig.update_layout(height=400, showlegend=True)
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col2:
+            if 'growth' in datasets:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown('<h3 class="chart-title">📊 Volatilitas Pertumbuhan</h3>', unsafe_allow_html=True)
+                
+                # Calculate rolling average
+                df_growth = datasets['growth'].copy()
+                df_growth = df_growth.sort_values(['migas dan non migas', 'tahun'])
+                df_growth['rolling_avg'] = df_growth.groupby('migas dan non migas')['pertumbuhan ekonomi'].rolling(window=3, center=True).mean().reset_index(0, drop=True)
+                
+                fig = go.Figure()
+                
+                for category in df_growth['migas dan non migas'].unique():
+                    df_cat = df_growth[df_growth['migas dan non migas'] == category]
+                    color = '#1e40af' if category == 'Migas' else '#3b82f6'
+                    
+                    fig.add_trace(go.Scatter(
+                        x=df_cat['tahun'], y=df_cat['pertumbuhan ekonomi'],
+                        mode='lines+markers', name=f'{category} (Aktual)',
+                        line=dict(color=color, width=2, dash='dot'),
+                        opacity=0.6
+                    ))
+                    
+                    fig.add_trace(go.Scatter(
+                        x=df_cat['tahun'], y=df_cat['rolling_avg'],
+                        mode='lines', name=f'{category} (Trend)',
+                        line=dict(color=color, width=3)
+                    ))
+                
+                fig.update_layout(height=400, showlegend=True,
+                                xaxis_title="Tahun", yaxis_title="Pertumbuhan (%)")
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
     
     with tab3:
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.subheader("PDRB Per Kapita Provinsi")
-        st.dataframe(filtered_data['percapita'], use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<h2 style="text-align: center; margin-bottom: 2rem;">🗺️ Analisis Regional Mendalam</h2>', unsafe_allow_html=True)
         
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.subheader("PDRB Per Kapita Kabupaten/Kota")
-        st.dataframe(filtered_data['percapita_kab'], use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        if 'regional_contrib' in datasets:
+            # Time series selector
+            years_available = sorted(datasets['regional_contrib']['tahun'].unique())
+            selected_year = st.selectbox("Pilih Tahun untuk Analisis:", years_available, 
+                                       index=len(years_available)-1)
+            
+            regional_data = datasets['regional_contrib'][datasets['regional_contrib']['tahun'] == selected_year]
+            
+            col1, col2 = st.columns([2, 1])
+            
+            with col1:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown(f'<h3 class="chart-title">🏆 Kontribusi Regional PDRB ({selected_year})</h3>', unsafe_allow_html=True)
+                
+                # Sort by total contribution
+                regional_summary = regional_data.groupby('bps_nama_kabupaten_kota')['kontribusi PDRB'].sum().reset_index()
+                regional_summary = regional_summary.sort_values('kontribusi PDRB', ascending=True).tail(15)
+                
+                fig = px.bar(regional_summary, x='kontribusi PDRB', y='bps_nama_kabupaten_kota',
+                           orientation='h',
+                           title="",
+                           labels={'kontribusi PDRB': 'Kontribusi (%)', 'bps_nama_kabupaten_kota': 'Kabupaten/Kota'},
+                           color='kontribusi PDRB',
+                           color_continuous_scale='Blues')
+                fig.update_layout(height=600, showlegend=False)
+                st.plotly_chart(fig, use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col2:
+                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                st.markdown(f'<h3 class="chart-title">📊 Top 10 Kontributor ({selected_year})</h3>', unsafe_allow_html=True)
+                
+                top_contributors = regional_data.groupby('bps_nama_kabupaten_kota')['kontribusi PDRB'].sum().reset_index()
+                top_contributors = top_contributors.nlargest(10, 'kontribusi PDRB')
+                top_contributors['Ranking'] = range(1, len(top_contributors) + 1)
+                
+                # Display as formatted table
+                for idx, row in top_contributors.iterrows():
+                    rank_color = "#1e40af" if row['Ranking'] <= 3 else "#64748b"
+                    st.markdown(f"""
+                    <div style="padding: 0.5rem; margin: 0.5rem 0; border-left: 4px solid {rank_color}; background: #f8fafc;">
+                        <strong>#{row['Ranking']} {row['bps_nama_kabupaten_kota']}</strong><br>
+                        <span style="color: #64748b;">Kontribusi: {row['kontribusi PDRB']:.2f}%</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Regional comparison over time
+        if 'regional_contrib' in datasets:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            st.markdown('<h3 class="chart-title">📈 Evolusi Kontribusi Regional Top 8 Kabupaten/Kota</h3>', unsafe_allow_html=True)
+            
+            # Get top 8 contributors in latest year
+            latest_year = datasets['regional_contrib']['tahun'].max()
+            latest_regional = datasets['regional_contrib'][datasets['regional_contrib']['tahun'] == latest_year]
+            top_8 = latest_regional.groupby('bps_nama_kabupaten_kota')['kontribusi PDRB'].sum().nlargest(8).index
+            
+            regional_evolution = datasets['regional_contrib'][
+                datasets['regional_contrib']['bps_nama_kabupaten_kota'].isin(top_8)
+            ].groupby(['tahun', 'bps_nama_kabupaten_kota'])['kontribusi PDRB'].sum().reset_index()
+            
+            fig = px.line(regional_evolution, x='tahun', y='kontribusi PDRB',
+                        color='bps_nama_kabupaten_kota',
+                        title="",
+                        labels={'kontribusi PDRB': 'Kontribusi (%)', 'tahun': 'Tahun'})
+            fig.update_traces(line=dict(width=3), marker=dict(size=6))
+            fig.update_layout(height=500, showlegend=True)
+            st.plotly_chart(fig, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Per capita regional analysis
+        if 'percapita_kab' in datasets:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            st.markdown('<h3 class="chart-title">💰 PDRB Per Kapita Regional (Top 10)</h3>', unsafe_allow_html=True)
+            
+            latest_pc = datasets['percapita_kab'][datasets['percapita_kab']['tahun'] == datasets['percapita_kab']['tahun'].max()]
+            top_pc = latest_pc.nlargest(10, 'kontribusi PDRB')
+            
+            fig = px.bar(top_pc, x='bps_nama_kabupaten_kota', y='kontribusi PDRB',
+                       color='migas dan non migas',
+                       color_discrete_map={'Migas': '#1e40af', 'NonMigas': '#3b82f6'},
+                       title="",
+                       labels={'kontribusi PDRB': 'PDRB Per Kapita (Juta Rupiah)', 'bps_nama_kabupaten_kota': 'Kabupaten/Kota'})
+            fig.update_layout(height=500, showlegend=True, xaxis_tickangle=-45)
+            st.plotly_chart(fig, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
     
     with tab4:
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.subheader("Kontribusi Regional")
-        st.dataframe(filtered_data['regional_contrib'], use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<h2 style="text-align: center; margin-bottom: 2rem;">📋 Data Tables & Export</h2>', unsafe_allow_html=True)
+        
+        # Dataset selector
+        dataset_options = {
+            "PDRB ADHB & ADHK": "pdrb",
+            "Pertumbuhan Ekonomi": "growth", 
+            "Sektor dengan Migas": "sector_migas",
+            "Sektor Non-Migas": "sector_nonmigas",
+            "Kelompok Pengeluaran": "expenditure",
+            "Per Kapita Provinsi": "percapita",
+            "Kontribusi Regional": "regional_contrib",
+            "Per Kapita Regional": "percapita_kab"
+        }
+        
+        selected_dataset = st.selectbox("Pilih Dataset untuk Ditampilkan:", 
+                                      list(dataset_options.keys()))
+        
+        dataset_key = dataset_options[selected_dataset]
+        
+        if dataset_key in datasets:
+            df = datasets[dataset_key]
+            
+            col1, col2, col3 = st.columns([2, 1, 1])
+            
+            with col1:
+                st.markdown(f"#### 📊 {selected_dataset}")
+                st.markdown(f"**Records**: {len(df):,} | **Columns**: {len(df.columns)}")
+            
+            with col2:
+                # Download button
+                csv_buffer = io.StringIO()
+                df.to_csv(csv_buffer, index=False, sep=';')
+                st.download_button(
+                    label="💾 Download CSV",
+                    data=csv_buffer.getvalue(),
+                    file_name=f"aceh_{dataset_key}_{datetime.now().strftime('%Y%m%d')}.csv",
+                    mime="text/csv",
+                    use_container_width=True
+                )
+            
+            with col3:
+                # Filter option
+                show_filtered = st.checkbox("Filter Data", value=False)
+            
+            # Display data
+            if show_filtered and 'tahun' in df.columns:
+                year_range = st.slider("Pilih Range Tahun:", 
+                                     int(df['tahun'].min()), 
+                                     int(df['tahun'].max()),
+                                     (int(df['tahun'].min()), int(df['tahun'].max())))
+                filtered_df = df[(df['tahun'] >= year_range[0]) & (df['tahun'] <= year_range[1])]
+                st.dataframe(filtered_df, use_container_width=True, height=400)
+            else:
+                st.dataframe(df, use_container_width=True, height=400)
+        
+        else:
+            st.error(f"Dataset '{selected_dataset}' tidak tersedia.")
+
+def show_data_upload_section(sector_key):
+    """Show data upload section for new sectors"""
+    sector = SECTORS[sector_key]
+    
+    st.markdown(f"""
+    <div class="main-header">
+        <h1 class="main-title">{sector['icon']} {sector['name']}</h1>
+        <p class="main-subtitle">{sector['description']}</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Upload section
+    st.markdown("""
+    <div class="upload-section">
+        <div class="upload-icon">📤</div>
+        <h2 class="upload-title">Upload Data untuk Sektor Ini</h2>
+        <p class="upload-desc">Upload multiple file CSV untuk membuat visualisasi otomatis. 
+        File akan diproses dan menghasilkan chart yang sesuai dengan struktur data.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # File uploader
+    uploaded_files = st.file_uploader(
+        "Pilih file CSV (multiple files allowed)",
+        type=['csv'],
+        accept_multiple_files=True,
+        key=f"upload_{sector_key}",
+        help="Upload multiple CSV files. Sistem akan otomatis membuat visualisasi berdasarkan struktur data."
+    )
+    
+    if uploaded_files:
+        st.success(f"✅ {len(uploaded_files)} file berhasil diupload!")
+        
+        # Process each file
+        for i, file in enumerate(uploaded_files):
+            try:
+                # Read CSV with different separators
+                try:
+                    df = pd.read_csv(file, sep=';', encoding='utf-8')
+                except:
+                    try:
+                        df = pd.read_csv(file, sep=',', encoding='utf-8')
+                    except:
+                        df = pd.read_csv(file, sep=';', encoding='latin1')
+                
+                # Store in session state
+                if sector_key not in st.session_state.uploaded_data:
+                    st.session_state.uploaded_data[sector_key] = {}
+                
+                st.session_state.uploaded_data[sector_key][file.name] = df
+                
+                # Create expandable section for each file
+                with st.expander(f"📊 {file.name} - {len(df)} rows × {len(df.columns)} columns", expanded=i==0):
+                    
+                    # Data preview
+                    st.markdown("#### 📋 Data Preview")
+                    st.dataframe(df.head(10), use_container_width=True)
+                    
+                    # Data info
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Total Rows", len(df))
+                    with col2:
+                        st.metric("Total Columns", len(df.columns))
+                    with col3:
+                        numeric_cols = len(df.select_dtypes(include=[np.number]).columns)
+                        st.metric("Numeric Columns", numeric_cols)
+                    
+                    # Auto-generate visualizations
+                    st.markdown("#### 📈 Auto-Generated Visualizations")
+                    
+                    charts = auto_generate_charts(df, file.name)
+                    
+                    if charts:
+                        # Display charts in grid
+                        if len(charts) >= 2:
+                            chart_cols = st.columns(2)
+                            for idx, (chart_type, title, fig) in enumerate(charts[:4]):  # Max 4 charts
+                                with chart_cols[idx % 2]:
+                                    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                                    st.plotly_chart(fig, use_container_width=True)
+                                    st.markdown('</div>', unsafe_allow_html=True)
+                        else:
+                            for chart_type, title, fig in charts:
+                                st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+                                st.plotly_chart(fig, use_container_width=True)
+                                st.markdown('</div>', unsafe_allow_html=True)
+                    else:
+                        st.info("📊 Tidak dapat menghasilkan chart otomatis untuk data ini. Data mungkin memerlukan preprocessing khusus.")
+                    
+                    # Download processed data
+                    csv_buffer = io.StringIO()
+                    df.to_csv(csv_buffer, index=False, sep=';')
+                    st.download_button(
+                        label="💾 Download Processed Data",
+                        data=csv_buffer.getvalue(),
+                        file_name=f"processed_{file.name}",
+                        mime="text/csv",
+                        use_container_width=True
+                    )
+            
+            except Exception as e:
+                st.error(f"❌ Error processing {file.name}: {str(e)}")
+    
+    # Implementation Guide
+    st.markdown('<h2 class="section-title">📚 Panduan Implementasi Dashboard Sektor</h2>', unsafe_allow_html=True)
+    
+    # Rules and guidelines
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="chart-container">
+            <h3 class="chart-title">🎯 Rules untuk Data Upload</h3>
+            <div style="padding: 1rem;">
+                <h4>📁 Format File:</h4>
+                <ul>
+                    <li>Format: <code>.csv</code></li>
+                    <li>Separator: <code>;</code> (semicolon) atau <code>,</code> (comma)</li>
+                    <li>Encoding: UTF-8 atau Latin-1</li>
+                    <li>Header: Baris pertama berisi nama kolom</li>
+                </ul>
+                
+                <h4>📊 Struktur Data yang Optimal:</h4>
+                <ul>
+                    <li><strong>Kolom tahun/waktu:</strong> Untuk trend analysis</li>
+                    <li><strong>Kolom kategori:</strong> Untuk grouping dan comparison</li>
+                    <li><strong>Kolom numerik:</strong> Untuk perhitungan dan visualisasi</li>
+                    <li><strong>Konsistensi nama:</strong> Standar penamaan kolom</li>
+                </ul>
+                
+                <h4>🔧 Auto-Processing Features:</h4>
+                <ul>
+                    <li>✅ Deteksi otomatis tipe data</li>
+                    <li>✅ Generate chart berdasarkan pola data</li>
+                    <li>✅ Time series untuk data temporal</li>
+                    <li>✅ Distribution analysis untuk data numerik</li>
+                </ul>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="chart-container">
+            <h3 class="chart-title">🚀 Chart Auto-Generation Logic</h3>
+            <div style="padding: 1rem;">
+                <h4>📈 Chart Types Generated:</h4>
+                <ul>
+                    <li><strong>Line Chart:</strong> Jika ada kolom tahun + numerik</li>
+                    <li><strong>Bar Chart:</strong> Kategori vs numerik</li>
+                    <li><strong>Histogram:</strong> Distribusi data numerik</li>
+                    <li><strong>Heatmap:</strong> Korelasi antar variabel numerik</li>
+                </ul>
+                
+                <h4>🎨 Best Practices:</h4>
+                <ul>
+                    <li>Satu file = satu tema/topik data</li>
+                    <li>Maksimal 15 kategori untuk bar chart</li>
+                    <li>Data sampel dibatasi untuk performa</li>
+                    <li>Chart disesuaikan dengan ukuran data</li>
+                </ul>
+                
+                <h4>📝 Contoh Struktur Data:</h4>
+                <pre style="background: #f8fafc; padding: 1rem; border-radius: 8px; font-size: 0.8rem;">
+tahun;kategori;nilai;persentase
+2010;Sektor A;1000;25.5
+2010;Sektor B;1500;37.5
+2011;Sektor A;1200;28.5
+2011;Sektor B;1800;42.8</pre>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 def main():
     """Main application function"""
     # Initialize session state
     if 'selected_sector' not in st.session_state:
-        st.session_state.selected_sector = 'overview'
+        st.session_state.selected_sector = 'beranda'
+    if 'uploaded_data' not in st.session_state:
+        st.session_state.uploaded_data = {}
     
-    # Load data
-    with st.spinner('Memuat data...'):
-        data_dict = load_data()
+    # Load datasets
+    datasets = load_datasets()
     
-    if data_dict is None:
-        st.error("Gagal memuat data. Pastikan file CSV tersedia di folder 'data/'")
-        st.stop()
-    
-    # Sidebar
+    # Enhanced Modern Sidebar
     with st.sidebar:
-        st.markdown('<div class="sidebar-section">', unsafe_allow_html=True)
-        st.markdown('<h3 class="sidebar-title">🎛️ Kontrol Dashboard</h3>', unsafe_allow_html=True)
-        
-        # Sector selection
-        sector_options = [(key, value['name']) for key, value in SECTORS.items()]
-        sector_names = [name for _, name in sector_options]
-        sector_keys = [key for key, _ in sector_options]
-        
-        current_index = sector_keys.index(st.session_state.selected_sector) if st.session_state.selected_sector in sector_keys else 0
-        
-        selected_sector_name = st.selectbox(
-            "Pilih Sektor Analisis:",
-            sector_names,
-            index=current_index
-        )
-        
-        # Update session state based on selection
-        selected_sector_key = sector_keys[sector_names.index(selected_sector_name)]
-        if selected_sector_key != st.session_state.selected_sector:
-            st.session_state.selected_sector = selected_sector_key
-            st.rerun()
-        
-        # Year range selector (only for neraca_regional)
-        if st.session_state.selected_sector == 'neraca_regional':
-            st.markdown("---")
-            year_range = st.slider(
-                "Rentang Tahun Analisis:", 
-                min_value=1975, 
-                max_value=2013, 
-                value=(1975, 2013),
-                step=1
-            )
-        else:
-            year_range = (1975, 2013)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Info section
-        st.markdown('<div class="sidebar-section">', unsafe_allow_html=True)
-        st.markdown('<h3 class="sidebar-title">ℹ️ Informasi Dashboard</h3>', unsafe_allow_html=True)
-        
-        if st.session_state.selected_sector in SECTORS:
-            sector_info = SECTORS[st.session_state.selected_sector]
-            st.markdown(f"**Sektor Aktif:** {sector_info['icon']} {sector_info['name']}")
-            st.markdown(f"**Deskripsi:** {sector_info['description']}")
-        
-        st.markdown("---")
+        # Logo and Title
         st.markdown("""
-        **Sumber Data:** BPS Provinsi Aceh & BAPPEDA Aceh
-        
-        **Periode Data:** 1975-2013
-        
-        **Update Terakhir:** Desember 2024
-        
-        **Status Sektor:**
-        - ✅ Neraca Regional (Tersedia)
-        - ⏳ 13 Sektor Lainnya (Coming Soon)
-        """)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Main content based on selected sector
-    if st.session_state.selected_sector == 'overview':
-        show_overview_dashboard()
-    elif st.session_state.selected_sector == 'neraca_regional':
-        show_neraca_regional_dashboard(data_dict, year_range)
-    else:
-        # Coming soon page for other sectors
-        sector_info = SECTORS[st.session_state.selected_sector]
-        st.markdown('<h1 class="main-header">🚧 Coming Soon</h1>', unsafe_allow_html=True)
-        st.markdown(f'<p class="subtitle">Sektor {sector_info["icon"]} {sector_info["name"]} sedang dalam pengembangan</p>', unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="stats-overview">
-            <h2 style="margin-bottom: 2rem;">Sektor Ini Akan Segera Tersedia</h2>
-            <p style="font-size: 1.2rem; opacity: 0.9;">
-                Kami sedang mengembangkan visualisasi data untuk sektor ini. 
-                Sementara waktu, Anda dapat mengeksplorasi data Neraca Regional yang sudah tersedia.
-            </p>
-            <br>
+        <div class="sidebar-card">
+            <h3>🏛️ Dashboard Pembangunan Aceh</h3>
+            <p>Visualisasi data pembangunan multi-sektor dengan teknologi interaktif modern</p>
+        </div>
         """, unsafe_allow_html=True)
         
-        if st.button("🏠 Kembali ke Dashboard Umum", key="back_to_overview"):
-            st.session_state.selected_sector = 'overview'
+        # Sector Selection
+        st.markdown("""
+        <div class="sidebar-card">
+            <h3>🎯 Navigasi Sektor</h3>
+            <p>Pilih sektor untuk analisis mendalam dan visualisasi komprehensif</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Create sector options with better formatting
+        sector_options = []
+        sector_keys = []
+        
+        for key, sector in SECTORS.items():
+            if sector["available"]:
+                display_name = f"✅ {sector['name']}"
+            else:
+                display_name = f"⏳ {sector['name']}"
+            sector_options.append(display_name)
+            sector_keys.append(key)
+        
+        # Find current index
+        try:
+            current_index = sector_keys.index(st.session_state.selected_sector)
+        except ValueError:
+            current_index = 0
+        
+        # Selectbox
+        selected_display = st.selectbox(
+            "Pilih Sektor Analisis:",
+            sector_options,
+            index=current_index,
+            key="sector_selector"
+        )
+        
+        # Update session state
+        selected_key = sector_keys[sector_options.index(selected_display)]
+        if selected_key != st.session_state.selected_sector:
+            st.session_state.selected_sector = selected_key
             st.rerun()
         
-        if st.button("📊 Lihat Neraca Regional", key="goto_neraca"):
-            st.session_state.selected_sector = 'neraca_regional'
-            st.rerun()
+        # Current sector info
+        current_sector = SECTORS[st.session_state.selected_sector]
+        st.markdown(f"""
+        <div class="sidebar-card">
+            <h3>{current_sector['icon']} Sektor Aktif</h3>
+            <p><strong>{current_sector['name']}</strong></p>
+            <p>{current_sector['description']}</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown('</div>', unsafe_allow_html=True)
+        # Data statistics
+        if datasets:
+            total_datasets = len(datasets)
+            total_rows = sum(len(df) for df in datasets.values())
+            
+            st.markdown(f"""
+            <div class="sidebar-card">
+                <h3>📊 Statistik Data</h3>
+                <div class="info-item">
+                    <span class="info-label">Dataset Tersedia</span>
+                    <span class="info-value">{total_datasets}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Total Records</span>
+                    <span class="info-value">{total_rows:,}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Periode Data</span>
+                    <span class="info-value">1958-2014</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Wilayah</span>
+                    <span class="info-value">23 Kab/Kota</span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # Implementation status
+        available_count = sum(1 for s in SECTORS.values() if s["available"])
+        total_count = len(SECTORS)
+        progress = (available_count/total_count*100)
+        
+        st.markdown(f"""
+        <div class="sidebar-card">
+            <h3>🎯 Status Implementasi</h3>
+            <div class="info-item">
+                <span class="info-label">Sektor Tersedia</span>
+                <span class="info-value">{available_count}/{total_count}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Progress</span>
+                <span class="info-value">{progress:.0f}%</span>
+            </div>
+            <p>Terus dikembangkan dengan fitur upload otomatis untuk sektor baru</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Quick Actions
+        st.markdown("""
+        <div class="sidebar-card">
+            <h3>⚡ Quick Actions</h3>
+            <p>Navigasi cepat ke fitur utama dashboard</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🏠 Home", use_container_width=True):
+                st.session_state.selected_sector = "beranda"
+                st.rerun()
+        with col2:
+            if st.button("📊 Neraca", use_container_width=True):
+                st.session_state.selected_sector = "neraca_regional"
+                st.rerun()
     
-    # Footer
+    # Main Content Area
+    if st.session_state.selected_sector == "beranda":
+        show_beranda(datasets)
+    elif st.session_state.selected_sector == "neraca_regional":
+        show_neraca_regional(datasets)
+    else:
+        # Show upload section for other sectors
+        show_data_upload_section(st.session_state.selected_sector)
+    
+    # Enhanced Footer
     st.markdown("---")
     st.markdown("""
-    <div style='text-align: center; color: #666; padding: 30px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 15px; margin-top: 3rem;'>
-        <h3 style='color: #2c3e50; margin-bottom: 1rem;'>Dashboard Pembangunan Provinsi Aceh</h3>
-        <p style='font-size: 1.1rem; margin-bottom: 0.5rem;'><strong>Dikembangkan untuk UPTD Statistik Diskominsa Aceh</strong></p>
-        <p style='margin-bottom: 0.5rem;'>Data Source: BPS Provinsi Aceh & BAPPEDA Aceh</p>
-        <p style='margin-bottom: 1rem;'>Visualisasi Data Pembangunan Multi-Sektor dari Masa ke Masa (1975-2013)</p>
-        <p style='font-size: 0.9rem; color: #7f8c8d;'>© 2024 - Interactive Analytics Dashboard</p>
+    <div style='text-align: center; padding: 3rem; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); 
+                border-radius: 24px; margin-top: 4rem; color: white; position: relative; overflow: hidden;'>
+        <div style='position: relative; z-index: 2;'>
+            <h3 style='color: white; margin-bottom: 1rem; font-weight: 800; font-size: 1.8rem;'>Dashboard Pembangunan Provinsi Aceh</h3>
+            <p style='font-size: 1.2rem; margin-bottom: 1rem; opacity: 0.9;'><strong>UPTD Statistik Diskominsa Aceh</strong></p>
+            <p style='margin-bottom: 0.5rem; opacity: 0.8;'>Sumber Data: Open Data Aceh | Publikasi "Pembangunan Aceh dari Masa ke Masa"</p>
+            <p style='margin-bottom: 1rem; opacity: 0.8;'>Visualisasi Data Pembangunan Multi-Sektor (1958-2014)</p>
+            <div style='display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2rem;'>
+                <span style='background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px;'>📊 Interactive Analytics</span>
+                <span style='background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px;'>🚀 Auto-Visualization</span>
+                <span style='background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px;'>📈 Real-time Processing</span>
+            </div>
+            <p style='font-size: 0.9rem; margin-top: 2rem; opacity: 0.7;'>© 2024 - Powered by Streamlit & Plotly</p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
