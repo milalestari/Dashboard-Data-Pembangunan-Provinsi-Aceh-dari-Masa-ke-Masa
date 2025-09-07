@@ -84,7 +84,7 @@ def create_sample_data():
             }
         ])
     
-    pd.DataFrame(pdrb_data).to_csv('data/PDRB ADHB dan ADHK dengan Migas dan Non-Migas 10.1.csv', sep=';', index=False)
+    pd.DataFrame(pdrb_data).to_csv('data neraca regional/PDRB ADHB dan ADHK dengan Migas dan Non-Migas 10.1.csv', sep=';', index=False)
     print("✓ PDRB ADHB dan ADHK dengan Migas dan Non-Migas 10.1.csv created")
     
     # 2. Economic Growth data (1976-2013)
@@ -119,7 +119,7 @@ def create_sample_data():
             }
         ])
     
-    pd.DataFrame(growth_data).to_csv('data/Pertumbuhan Ekonomi Aceh Migas dan Non-Migas 10.2.csv', sep=';', index=False)
+    pd.DataFrame(growth_data).to_csv('data neraca regional/Pertumbuhan Ekonomi Aceh Migas dan Non-Migas 10.2.csv', sep=';', index=False)
     print("✓ Pertumbuhan Ekonomi Aceh Migas dan Non-Migas 10.2.csv created")
     
     # 3. Sector contribution with migas (1969-2013)
@@ -166,7 +166,7 @@ def create_sample_data():
                 'satuan': '%'
             })
     
-    pd.DataFrame(sector_migas_data).to_csv('data/Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas 10.3.csv', sep=';', index=False)
+    pd.DataFrame(sector_migas_data).to_csv('data neraca regional/Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas 10.3.csv', sep=';', index=False)
     print("✓ Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas 10.3.csv created")
     
     # 4. Sector contribution non-migas (1975-2013)
@@ -205,7 +205,7 @@ def create_sample_data():
                 'satuan': '%'
             })
     
-    pd.DataFrame(sector_nonmigas_data).to_csv('data/Kontribusi PDRB Aceh Menurut Kelompok Sektor Non-Migas 10.4.csv', sep=';', index=False)
+    pd.DataFrame(sector_nonmigas_data).to_csv('data neraca regional/Kontribusi PDRB Aceh Menurut Kelompok Sektor Non-Migas 10.4.csv', sep=';', index=False)
     print("✓ Kontribusi PDRB Aceh Menurut Kelompok Sektor Non-Migas 10.4.csv created")
     
     # 5. Expenditure contribution (1969-2013)
@@ -241,7 +241,7 @@ def create_sample_data():
                 'satuan': '%'
             })
     
-    pd.DataFrame(expenditure_data).to_csv('data/Kontribusi PDRB Menurut Kelompok Pengeluaran 10.5.csv', sep=';', index=False)
+    pd.DataFrame(expenditure_data).to_csv('data neraca regional/Kontribusi PDRB Menurut Kelompok Pengeluaran 10.5.csv', sep=';', index=False)
     print("✓ Kontribusi PDRB Menurut Kelompok Pengeluaran 10.5.csv created")
     
     # 6. Per capita PDRB (1975-2013)
@@ -288,7 +288,7 @@ def create_sample_data():
             }
         ])
     
-    pd.DataFrame(percapita_data).to_csv('data/PDRB Per Kapita Aceh 10.6.csv', sep=';', index=False)
+    pd.DataFrame(percapita_data).to_csv('data neraca regional/PDRB Per Kapita Aceh 10.6.csv', sep=';', index=False)
     print("✓ PDRB Per Kapita Aceh 10.6.csv created")
     
     # 7. Regional contribution (2000-2013) - Kabupaten/Kota level
@@ -363,7 +363,7 @@ def create_sample_data():
                 }
             ])
     
-    pd.DataFrame(regional_data).to_csv('data/Kontribusi Kabupaten atau Kota terhadap PDRB 10.7.csv', sep=';', index=False)
+    pd.DataFrame(regional_data).to_csv('data neraca regional/Kontribusi Kabupaten atau Kota terhadap PDRB 10.7.csv', sep=';', index=False)
     print("✓ Kontribusi Kabupaten atau Kota terhadap PDRB 10.7.csv created")
     
     # 8. Per capita Kabupaten/Kota (2000-2013)
@@ -432,14 +432,14 @@ def create_sample_data():
                     }
                 ])
     
-    pd.DataFrame(percapita_kab_data).to_csv('data/PDRB Per Kapita Kabupaten atau Kota 10.8.csv', sep=';', index=False)
+    pd.DataFrame(percapita_kab_data).to_csv('data neraca regional/PDRB Per Kapita Kabupaten atau Kota 10.8.csv', sep=';', index=False)
     print("✓ PDRB Per Kapita Kabupaten atau Kota 10.8.csv created")
     
     # Summary
     print("\n" + "=" * 70)
     print("DATA GENERATION COMPLETED SUCCESSFULLY!")
     print("=" * 70)
-    print("\nFiles created in 'data/' directory:")
+    print("\nFiles created in 'data neraca regional/' directory:")
     print("1. ✓ PDRB ADHB dan ADHK dengan Migas dan Non-Migas 10.1.csv - PDRB data (1975-2013)")
     print("2. ✓ Pertumbuhan Ekonomi Aceh Migas dan Non-Migas 10.2.csv - Economic growth (1976-2013)")
     print("3. ✓ Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas 10.3.csv - Sector contribution with oil/gas (1969-2013)")
@@ -466,14 +466,14 @@ def validate_generated_data():
     print("=" * 50)
     
     files_to_check = [
-        'data/PDRB ADHB dan ADHK dengan Migas dan Non-Migas 10.1.csv',
-        'data/Pertumbuhan Ekonomi Aceh Migas dan Non-Migas 10.2.csv', 
-        'data/Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas 10.3.csv',
-        'data/Kontribusi PDRB Aceh Menurut Kelompok Sektor Non-Migas 10.4.csv',
-        'data/Kontribusi PDRB Menurut Kelompok Pengeluaran 10.5.csv',
-        'data/PDRB Per Kapita Aceh 10.6.csv',
-        'data/Kontribusi Kabupaten atau Kota terhadap PDRB 10.7.csv',
-        'data/PDRB Per Kapita Kabupaten atau Kota 10.8.csv'
+        'data neraca regional/PDRB ADHB dan ADHK dengan Migas dan Non-Migas 10.1.csv',
+        'data neraca regional/Pertumbuhan Ekonomi Aceh Migas dan Non-Migas 10.2.csv', 
+        'data neraca regional/Kontribusi PDRB Menurut Kelompok Sektor Dengan Migas 10.3.csv',
+        'data neraca regional/Kontribusi PDRB Aceh Menurut Kelompok Sektor Non-Migas 10.4.csv',
+        'data neraca regional/Kontribusi PDRB Menurut Kelompok Pengeluaran 10.5.csv',
+        'data neraca regional/PDRB Per Kapita Aceh 10.6.csv',
+        'data neraca regional/Kontribusi Kabupaten atau Kota terhadap PDRB 10.7.csv',
+        'data neraca regional/PDRB Per Kapita Kabupaten atau Kota 10.8.csv'
     ]
     
     validation_results = {}

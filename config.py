@@ -7,108 +7,58 @@ APP_LAYOUT = "wide"
 APP_VERSION = "2.0"
 
 # Data settings
-DATA_PATH = "data/"
+DATA_PATH = "data neraca regional/"
 YEAR_RANGE = (1975, 2013)
 
 # Complete sector mapping with detailed information
 SECTORS = {
-    "overview": {
-        "name": "Dashboard Umum",
+    "beranda": {
+        "name": "Beranda",
         "icon": "🏠",
-        "description": "Ringkasan statistik pembangunan Aceh",
-        "bab": "Home",
+        "description": "Dashboard utama pembangunan Aceh",
         "available": True
     },
     "geografis": {
-        "name": "Geografis", 
-        "icon": "🗺️",
+        "name": "Geografis",
+        "icon": "🗺️", 
         "description": "Kondisi geografis dan wilayah",
-        "bab": "BAB II",
-        "available": False
-    },
-    "pemerintahan": {
-        "name": "Pemerintahan",
-        "icon": "🏛️", 
-        "description": "Struktur dan administrasi pemerintahan",
-        "bab": "BAB III",
-        "available": False
-    },
-    "pertanian": {
-        "name": "Pertanian",
-        "icon": "🌾",
-        "description": "Sektor pertanian dan perkebunan",
-        "bab": "BAB IV",
-        "available": False
+        "available": True
     },
     "listrik_gas_air": {
-        "name": "Listrik, Gas, dan Air",
+        "name": "Listrik, Gas & Air",
         "icon": "⚡",
-        "description": "Infrastruktur energi dan air",
-        "bab": "BAB V",
-        "available": False
-    },
-    "industri": {
-        "name": "Industri",
-        "icon": "🏭",
-        "description": "Sektor industri dan manufaktur",
-        "bab": "BAB VI",
-        "available": False
+        "description": "Infrastruktur energi dan utilitas",
+        "available": True
     },
     "perdagangan": {
-        "name": "Perdagangan",
+        "name": "Perdagangan", 
         "icon": "🛒",
         "description": "Aktivitas perdagangan dan komersial",
-        "bab": "BAB VII",
-        "available": False
+        "available": True
     },
     "inflasi_harga": {
-        "name": "Inflasi dan Harga",
+        "name": "Inflasi & Harga",
         "icon": "💰",
-        "description": "Indeks harga dan inflasi",
-        "bab": "BAB VIII",
-        "available": False
-    },
-    "transportasi": {
-        "name": "Transportasi, Telekomunikasi, dan Pariwisata",
-        "icon": "🚗",
-        "description": "Infrastruktur transportasi dan pariwisata",
-        "bab": "BAB IX",
-        "available": False
+        "description": "Indeks harga dan tingkat inflasi",
+        "available": True
     },
     "neraca_regional": {
         "name": "Neraca Regional",
-        "icon": "📊",
+        "icon": "📊", 
         "description": "PDRB dan indikator ekonomi regional",
-        "bab": "BAB X",
         "available": True
     },
-    "keuangan": {
-        "name": "Keuangan, Perbankan, dan Investasi",
-        "icon": "🏦",
-        "description": "Sektor keuangan dan investasi",
-        "bab": "BAB XI",
-        "available": False
-    },
     "penduduk": {
-        "name": "Penduduk dan Ketenagakerjaan",
+        "name": "Penduduk & Ketenagakerjaan",
         "icon": "👥",
-        "description": "Demografi dan ketenagakerjaan",
-        "bab": "BAB XII",
-        "available": False
+        "description": "Demografi dan ketenagakerjaan", 
+        "available": True
     },
     "sosial": {
-        "name": "Sosial dan Kesejahteraan Rakyat",
+        "name": "Sosial & Kesejahteraan",
         "icon": "❤️",
         "description": "Kesehatan, pendidikan, dan kesejahteraan",
-        "bab": "BAB XIII",
-        "available": False
-    },
-    "perumahan": {
-        "name": "Perumahan",
-        "icon": "🏘️",
-        "description": "Kondisi perumahan dan permukiman",
-        "bab": "BAB XIV",
-        "available": False
+        "available": True
     }
 }
 

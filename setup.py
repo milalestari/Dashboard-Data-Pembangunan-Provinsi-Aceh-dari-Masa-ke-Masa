@@ -63,7 +63,7 @@ def setup_project():
     print("├── requirements.txt     # Python dependencies")
     print("├── setup.py            # This setup script")
     print("├── README.md           # Project documentation")
-    print("└── data/               # Data files directory")
+    print("└── data neraca regional/ # Data files directory")
 
 if __name__ == "__main__":
     setup_project()
